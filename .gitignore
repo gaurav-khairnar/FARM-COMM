@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Next.js
+client/.next/
+client/out/
+client/build/
+client/.env.local
+
+# Server
+server/uploads/*
+!server/uploads/.gitkeep
+server/.env
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

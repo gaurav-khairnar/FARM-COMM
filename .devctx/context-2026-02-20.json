@@ -1,0 +1,144 @@
+{
+  "date": "2026-02-20",
+  "project": "farmer-marketplace",
+  "session_summary": "Full-stack MVP build, auth migration, UI stabilization, trust/reviews, media uploads, deployment readiness, and build-state recovery.",
+  "prompts": [
+    {
+      "id": 1,
+      "title": "Initial MVP Build",
+      "user_request": "Build runnable farmer marketplace MVP with Next.js + Express + MongoDB, OTP login, listings, cart, orders, role flows.",
+      "work_completed": [
+        "Scaffolded client/server structure",
+        "Implemented models: User, Product, Listing, Cart, Order",
+        "Implemented JWT auth routes and protected APIs",
+        "Implemented frontend pages: login, home, product detail, sell, cart, orders",
+        "Added baseline i18n, Tailwind, React Query, RHF, Zod"
+      ],
+      "artifacts": [
+        "server/src/models/*",
+        "server/src/controllers/*",
+        "server/src/routes/*",
+        "client/app/*",
+        "README.md",
+        ".env.example"
+      ],
+      "status": "completed"
+    },
+    {
+      "id": 2,
+      "title": "API Base / OTP JSON Parse Fix",
+      "user_request": "Fix frontend OTP JSON parse error from HTML response; enforce absolute API base and defensive parsing.",
+      "work_completed": [
+        "Hardened client/lib/api.js with API_BASE_URL guard",
+        "Added content-type checks before JSON parsing",
+        "Ensured API base comes from NEXT_PUBLIC_API_URL",
+        "Created client/.env.local",
+        "Restarted dev server and verified /login route health"
+      ],
+      "artifacts": [
+        "client/lib/api.js",
+        "client/app/login/page.js",
+        "client/.env.local"
+      ],
+      "status": "completed"
+    },
+    {
+      "id": 3,
+      "title": "Auth Migration + UI Upgrade",
+      "user_request": "Remove OTP/phone auth and replace with email/password + JWT + bcrypt; improve UI/UX and component consistency.",
+      "work_completed": [
+        "Migrated backend auth to register/login/logout",
+        "Updated User model to email/passwordHash",
+        "Added role-safe user dashboard APIs",
+        "Created reusable UI components and responsive navigation",
+        "Rebuilt login/register/home/product/sell/cart/orders/profile pages",
+        "Added Headless UI + Lucide",
+        "Updated docs and dev context"
+      ],
+      "artifacts": [
+        "server/src/controllers/authController.js",
+        "server/src/models/User.js",
+        "client/components/ui/*",
+        "client/components/layout/Navbar.js",
+        "client/app/*",
+        "devctx.json",
+        "README.md"
+      ],
+      "status": "completed"
+    },
+    {
+      "id": 4,
+      "title": "Login/Signup Required Field Fix",
+      "user_request": "Fix login/signup data fill and required field issues.",
+      "work_completed": [
+        "Fixed RHF integration by adding forwardRef to Input and Select",
+        "Added required + autocomplete attributes on auth forms"
+      ],
+      "artifacts": [
+        "client/components/ui/Input.js",
+        "client/components/ui/Select.js",
+        "client/app/login/page.js",
+        "client/app/register/page.js"
+      ],
+      "status": "completed"
+    },
+    {
+      "id": 5,
+      "title": "Next.js Missing Chunk Recovery",
+      "user_request": "Fix Cannot find module './427.js' during Next dev startup.",
+      "work_completed": [
+        "Stopped locked Node processes",
+        "Deleted .next, node_modules, package-lock",
+        "Cleaned npm cache",
+        "Reinstalled dependencies",
+        "Restarted dev server and verified login page response"
+      ],
+      "artifacts": [
+        "build state reset only (no source changes required)"
+      ],
+      "status": "completed"
+    },
+    {
+      "id": 6,
+      "title": "A+B+C+D Hardening Pass",
+      "user_request": "Implement stabilization, trust/reviews, media uploads, deployment readiness, plus realistic seed data.",
+      "work_completed": [
+        "Added Review model, controller, routes",
+        "Added seller trust aggregation (avg rating, review count, completed orders)",
+        "Added product image upload with multer validation (type/size/max files)",
+        "Added robust validation for expired listings, invalid quantities, empty carts",
+        "Added frontend review submission after completed order",
+        "Added image preview/gallery/fallback in cards and product detail",
+        "Added seed script with realistic users/products/orders/review",
+        "Updated .env.example, README, and devctx version"
+      ],
+      "artifacts": [
+        "server/src/models/Review.js",
+        "server/src/controllers/reviewController.js",
+        "server/src/routes/reviewRoutes.js",
+        "server/src/utils/upload.js",
+        "server/src/utils/seed.js",
+        "client/app/orders/page.js",
+        "client/app/product/[id]/page.js",
+        "client/app/sell/page.js",
+        "client/components/ListingCard.js",
+        "devctx.json",
+        "README.md"
+      ],
+      "status": "completed"
+    },
+    {
+      "id": 7,
+      "title": "Create .devctx Daily Context",
+      "user_request": "Create .devctx and save complete context of today's prompts.",
+      "work_completed": [
+        "Created .devctx directory",
+        "Saved dated prompt-level execution log"
+      ],
+      "artifacts": [
+        ".devctx/context-2026-02-20.json"
+      ],
+      "status": "completed"
+    }
+  ]
+}
