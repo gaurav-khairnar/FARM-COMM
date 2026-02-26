@@ -1,0 +1,68 @@
+{
+  "version": "1.2.0-stabilized",
+  "project": {
+    "name": "Farmer Marketplace",
+    "purpose": "Web-first marketplace where local farmers list produce and buyers place COD orders with freshness visibility and seller trust signals."
+  },
+  "implementation_status": {
+    "A_stabilization": "completed",
+    "B_trust_reviews": "completed",
+    "C_images_media": "completed",
+    "D_deployment_readiness": "completed"
+  },
+  "architecture": {
+    "frontend": "Next.js App Router (JavaScript) + Tailwind + React Query + React Hook Form + Zod + Headless UI + Lucide",
+    "backend": "Express.js + MongoDB + Mongoose + JWT + multer",
+    "auth_decision": "Email/password with bcrypt hashing and JWT sessions."
+  },
+  "trust_review_decision": {
+    "model": "Review(orderId unique, reviewerId, sellerId, rating, comment)",
+    "constraints": [
+      "Only buyer of the order can review",
+      "Review only allowed for completed orders",
+      "One review per order"
+    ],
+    "seller_trust_score": [
+      "average rating",
+      "review count",
+      "completed order count"
+    ]
+  },
+  "media_handling_decision": {
+    "strategy": "Local disk uploads via multer",
+    "constraints": [
+      "Maximum 5 product images",
+      "File types: JPG/PNG/WEBP",
+      "File size limit: 3MB each"
+    ],
+    "serving": "Express static /uploads"
+  },
+  "deployment_readiness": {
+    "env": [
+      "MONGO_URI",
+      "JWT_SECRET",
+      "PORT",
+      "NODE_ENV",
+      "CLIENT_ORIGIN",
+      "NEXT_PUBLIC_API_URL"
+    ],
+    "atlas_ready": true,
+    "next_build_status": "passes",
+    "seed_script": "npm run seed (server)"
+  },
+  "known_remaining_limitations": [
+    "No cloud storage integration yet",
+    "No pagination on feed/orders/reviews",
+    "No admin web UI for role management",
+    "No background image optimization pipeline"
+  ],
+  "update_policy": {
+    "must_update_on": [
+      "Auth changes",
+      "Permissions changes",
+      "Review/media/deployment architecture changes",
+      "API contract changes"
+    ],
+    "rule": "Every major implementation decision must be reflected in devctx.json before handoff."
+  }
+}

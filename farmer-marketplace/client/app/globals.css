@@ -1,0 +1,201 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Main 4-Color Palette */
+  --primary: #2D5016;           /* Forest Green - Trust & Nature */
+  --primary-light: #3D6B20;
+  --primary-dark: #1F3910;
+  
+  --secondary: #D17A4A;         /* Terracotta - Harvest & Warmth */
+  --secondary-light: #E09365;
+  --secondary-dark: #B66637;
+  
+  --accent: #F4B63F;            /* Golden Harvest - Freshness */
+  --accent-light: #FFD166;
+  --accent-dark: #E8A626;
+  
+  --neutral: #F7F5F2;           /* Soft Earth - Background */
+  --neutral-dark: #E8E6E3;
+  
+  /* Supporting Colors */
+  --bg: #FDFCFB;
+  --card: #ffffff;
+  --text: #1a1d16;
+  --text-muted: #6B7566;
+  --line: #E2DFD9;
+  --success: #4CAF50;
+  --warning: #FF9800;
+  --danger: #EF4444;
+  
+  /* Shadows & Effects */
+  --shadow-sm: 0 1px 3px rgba(45, 80, 22, 0.08);
+  --shadow-md: 0 4px 12px rgba(45, 80, 22, 0.12);
+  --shadow-lg: 0 10px 30px rgba(45, 80, 22, 0.15);
+  --shadow-glow: 0 0 20px rgba(244, 182, 63, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, var(--neutral) 0%, var(--bg) 50%, #FFF9F0 100%);
+  background-attachment: fixed;
+  color: var(--text);
+  min-height: 100vh;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-feature-settings: "kern" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--primary);
+}
+
+@layer utilities {
+  .surface-card {
+    @apply bg-white border border-[color:var(--line)] rounded-2xl shadow-sm;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .surface-card:hover {
+    box-shadow: var(--shadow-md);
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .btn-primary {
+    @apply bg-[color:var(--primary)] text-white font-semibold rounded-xl px-6 py-3 
+           transition-all duration-300 hover:bg-[color:var(--primary-light)] hover:shadow-md
+           active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .btn-secondary {
+    @apply bg-[color:var(--secondary)] text-white font-semibold rounded-xl px-6 py-3 
+           transition-all duration-300 hover:bg-[color:var(--secondary-light)] hover:shadow-md
+           active:scale-95;
+  }
+  
+  .btn-accent {
+    @apply bg-[color:var(--accent)] text-[color:var(--text)] font-semibold rounded-xl px-6 py-3 
+           transition-all duration-300 hover:bg-[color:var(--accent-light)] hover:shadow-md
+           active:scale-95;
+  }
+  
+  .gradient-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  }
+  
+  .gradient-harvest {
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
+  }
+  
+  .gradient-fresh {
+    background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 100%);
+  }
+  
+  .text-gradient {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .animate-fadeIn {
+    animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .animate-slide-in-right {
+    animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .badge-primary {
+    @apply inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700;
+  }
+  
+  .badge-secondary {
+    @apply inline-flex items-center gap-1 rounded-full bg-orange-50 px-3 py-1 text-xs font-semibold text-orange-700;
+  }
+  
+  .badge-accent {
+    @apply inline-flex items-center gap-1 rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
