@@ -19,6 +19,9 @@ dotenv.config();
 const app = express();
 connectDB();
 
+// Render runs Node behind a reverse proxy; trust first hop for correct client IP/rate limiting.
+app.set('trust proxy', 1);
+
 // Rate limiting - 100 requests per 15 minutes per IP
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
