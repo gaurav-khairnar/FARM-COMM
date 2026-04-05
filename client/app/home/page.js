@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, Suspense } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
 import { useSession } from '@/lib/useSession';
@@ -15,7 +15,7 @@ import Image from 'next/image';
 import { Sparkles, TrendingUp, Leaf, ShoppingBag, ChevronLeft, ChevronRight, Flame } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
-export default function HomePage() {
+function HomeContent() {
   const { ready } = useSession();
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('search') || '';
@@ -217,5 +217,13 @@ export default function HomePage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<PageLoader label="Loading marketplace..." />}>
+      <HomeContent />
+    </Suspense>
   );
 }
