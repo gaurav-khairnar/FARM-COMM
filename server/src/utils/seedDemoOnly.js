@@ -102,7 +102,8 @@ async function seedDemoOnly() {
 
     const existingListing = await Listing.findOne({
       productId: product._id,
-      isActive: true
+      isActive: true,
+      expiryDate: { $gte: new Date() }
     });
 
     if (!existingListing) {
