@@ -4,6 +4,24 @@ const Order = require('../models/Order');
 const Review = require('../models/Review');
 
 const isExpired = (date) => new Date(date).getTime() < Date.now();
+const STATIC_LISTING_EXPIRY_DAYS = 30;
+const RESTOCK_THRESHOLD = 5;
+const RESTOCK_TARGET_QUANTITY = 50;
+
+const getFutureExpiryDate = () => new Date(Date.now() + STATIC_LISTING_EXPIRY_DAYS * 24 * 60 * 60 * 1000);
+
+const maintainActiveListings = async () => {
+  await Promise.all([
+    Listing.updateMany(
+      { isActive: true, expiryDate: { $lt: new Date() } },
+      { $set: { expiryDate: getFutureExpiryDate() } }
+    ),
+    Listing.updateMany(
+      { isActive: true, quantity: { $lte: RESTOCK_THRESHOLD } },
+      { $set: { quantity: RESTOCK_TARGET_QUANTITY } }
+    )
+  ]);
+};
 
 const createListing = async (req, res) => {
   const { productId, price, quantity, unit, expiryDate, isActive } = req.body;
@@ -104,6 +122,8 @@ const deactivateListing = async (req, res) => {
 };
 
 const getMyListings = async (req, res) => {
+  await maintainActiveListings();
+
   const listings = await Listing.find({ createdBy: req.user._id })
     .populate('productId')
     .sort({ createdAt: -1 });
@@ -112,7 +132,9 @@ const getMyListings = async (req, res) => {
 };
 
 const getFeed = async (req, res) => {
-  const query = { isActive: true, expiryDate: { $gte: new Date() } };
+  await maintainActiveListings();
+
+  const query = { isActive: true };
   if (req.query.category) {
     const products = await Product.find({ category: req.query.category }).select('_id');
     query.productId = { $in: products.map((p) => p._id) };
@@ -127,6 +149,8 @@ const getFeed = async (req, res) => {
 };
 
 const getListingById = async (req, res) => {
+  await maintainActiveListings();
+
   const listing = await Listing.findById(req.params.id)
     .populate({ path: 'productId', populate: { path: 'createdBy', select: 'name email role' } })
     .populate('createdBy', 'name email role');

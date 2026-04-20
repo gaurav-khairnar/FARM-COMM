@@ -38,17 +38,36 @@
     "serving": "Express static /uploads"
   },
   "deployment_readiness": {
-    "env": [
+    "status": "PRODUCTION_LIVE",
+    "backend_platform": "Render (farmers-comm.onrender.com)",
+    "frontend_platform": "Netlify",
+    "database": "MongoDB Atlas",
+    "backend_env": [
       "MONGO_URI",
       "JWT_SECRET",
-      "PORT",
-      "NODE_ENV",
-      "CLIENT_ORIGIN",
-      "NEXT_PUBLIC_API_URL"
+      "PORT=5000",
+      "NODE_ENV=production",
+      "CLIENT_ORIGIN"
     ],
+    "frontend_env": [
+      "NEXT_PUBLIC_API_URL=https://farmers-comm.onrender.com/api"
+    ],
+    "build_configs": {
+      "netlify_base": "farmer-marketplace/client",
+      "netlify_build": "npm run build",
+      "netlify_publish": ".next",
+      "render_start": "npm start"
+    },
     "atlas_ready": true,
     "next_build_status": "passes",
-    "seed_script": "npm run seed (server)"
+    "seed_script": "npm run seed:demo (non-destructive) or npm run seed (full reset)",
+    "seed_status": "✓ 37 demo products seeded with active listings",
+    "demo_accounts": [
+      "farmer1@test.com / password123 (Ravi Patil, Nashik)",
+      "farmer2@test.com / password123 (Priya Kumar, Pune)",
+      "farmer3@test.com / password123 (Rajesh Singh, Satara)",
+      "buyer1@test.com / password123 (Anita Sharma, Mumbai)"
+    ]
   },
   "known_remaining_limitations": [
     "No cloud storage integration yet",

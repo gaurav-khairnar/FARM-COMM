@@ -69,3 +69,45 @@ This document records the issues, errors, and fixes encountered while migrating 
   });
   ```
 - By explicitly forcing the component to skip server-side execution, `useSearchParams()` is only evaluated directly by the browser DOM on load, fundamentally solving the Next.js 14 Netlify build pipeline crash.
+
+---
+
+## 5. Backend: Express Rate Limit Proxy Configuration Error
+**Error Symptoms:**
+- Render production logs showed validation error during startup:
+  `ValidationError: The 'X-Forwarded-For' header is set but the Express 'trust proxy' setting is false (default)`
+- express-rate-limit failed to identify legitimate client IPs because Render sits behind a reverse proxy.
+
+**Root Cause:**
+- Render runs Express behind a reverse proxy that forwards client IP via X-Forwarded-For header.
+- Without `trust proxy` enabled, Express treats all requests as coming from Render's internal IP, causing rate-limit confusion.
+
+**The Fix:**
+- Added `app.set('trust proxy', 1);` before rate-limiting middleware in server.js.
+- This instructs Express to trust the first proxy in the chain (Render) and correctly extract client IP from X-Forwarded-For.
+
+---
+
+## 6. Frontend: Demo Listings Not Visible After Initial Deployment
+**Error Symptoms:**
+- Backend API running, database connected, but `/api/listings/feed` returned empty array `[]`.
+- Netlify frontend showed no product listings on home page.
+
+**Root Cause:**
+- Demo data seeding was not run before production went live.
+- Non-destructive seed script had a bug: it skipped creating listings when only expired active listings existed, effectively hiding old demo products from the feed.
+
+**The Fix:**
+- Updated seed scripts (seed.js and seedDemoOnly.js) to check both isActive AND expiryDate { $gte: new Date() } when detecting existing listings.
+- Created protected API endpoint `/api/admin/seed-demo` gated by ADMIN_SEED_KEY environment variable.
+- Triggered seeding via HTTPS POST from local machine using Invoke-RestMethod PowerShell command.
+- Result: 37 demo products seeded with valid future expiry dates, all visible in production feed.
+
+**Production Seeding Pattern:**
+1. Add ADMIN_SEED_KEY to Render environment variables.
+2. Redeploy backend.
+3. Call POST https://farmers-comm.onrender.com/api/admin/seed-demo with x-admin-seed-key header.
+4. Remove ADMIN_SEED_KEY after seeding (security cleanup).
+5. Redeploy backend again.
+
+This pattern allows safe database seeding without Render Shell access (paid tier requirement) and maintains security by disabling the endpoint after use.

@@ -4,6 +4,11 @@ const Listing = require('../models/Listing');
 const Review = require('../models/Review');
 
 const isExpired = (date) => new Date(date).getTime() < Date.now();
+const STATIC_LISTING_EXPIRY_DAYS = 30;
+const RESTOCK_THRESHOLD = 5;
+const RESTOCK_TARGET_QUANTITY = 50;
+
+const getFutureExpiryDate = () => new Date(Date.now() + STATIC_LISTING_EXPIRY_DAYS * 24 * 60 * 60 * 1000);
 
 const createOrderFromCart = async (req, res) => {
   const cart = await Cart.findOne({ user: req.user._id }).populate('items.listing');
@@ -17,13 +22,30 @@ const createOrderFromCart = async (req, res) => {
       return res.status(400).json({ message: 'Invalid item quantity in cart' });
     }
 
+    if (!item.listing?._id) {
+      return res.status(400).json({ message: 'One or more listings are unavailable' });
+    }
+
     const listing = await Listing.findById(item.listing._id);
     if (!listing || !listing.isActive) {
       return res.status(400).json({ message: 'One or more listings are unavailable' });
     }
+
+    let listingUpdated = false;
     if (isExpired(listing.expiryDate)) {
-      return res.status(400).json({ message: 'One or more listings are expired' });
+      listing.expiryDate = getFutureExpiryDate();
+      listingUpdated = true;
     }
+
+    if (Number(listing.quantity) <= RESTOCK_THRESHOLD) {
+      listing.quantity = RESTOCK_TARGET_QUANTITY;
+      listingUpdated = true;
+    }
+
+    if (listingUpdated) {
+      await listing.save();
+    }
+
     if (item.quantity > listing.quantity) {
       return res.status(400).json({ message: 'Insufficient stock for one or more items' });
     }
